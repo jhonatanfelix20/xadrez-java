@@ -4,7 +4,7 @@ import xadrez.PecaXadrez;
 import xadrez.Color;
 import tabuleiro.Tabuleiro;
 
-public class Rei  extends PecaXadrez{
+public class Rei extends PecaXadrez{
 
     public Rei(Tabuleiro tabuleiro, Color cor) {
         super(tabuleiro, cor);
