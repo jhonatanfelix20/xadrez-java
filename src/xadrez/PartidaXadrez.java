@@ -1,6 +1,5 @@
 package xadrez;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,13 +91,12 @@ public class PartidaXadrez {
         // #specialmove promotion
         promocao = null;
         if (pecaMoveu instanceof Peao) {
-            if ((pecaMoveu.getCor() == Color.WHITE && destino.getLinha() == 0) || (pecaMoveu.getCor() == Color.BLACK && destino.getLinha() == 7)) {
+            if ((pecaMoveu.getCor() == Color.WHITE && destino.getLinha() == 0)
+                    || (pecaMoveu.getCor() == Color.BLACK && destino.getLinha() == 7)) {
                 promocao = (PecaXadrez) tabuleiro.peca(destino);
                 promocao = substituirPeca("Q");
             }
         }
-        
-
 
         check = (testCheck(oponente(jogadorAtual))) ? true : false;
 
@@ -119,12 +117,12 @@ public class PartidaXadrez {
         return (PecaXadrez) capturaPeca;
     }
 
-    public PecaXadrez substituirPeca(String type){
+    public PecaXadrez substituirPeca(String type) {
         if (promocao == null) {
-            throw new XadrezException("Nao ha peca para ser promovida");            
+            throw new XadrezException("Nao ha peca para ser promovida");
         }
         if (!type.equals("B") && !type.equals("C") && !type.equals("R") && !type.equals("Q")) {
-            throw new InvalidParameterException("Tipo de peça para promocao invaçida");
+            return promocao;
         }
 
         Posicao pos = promocao.getXadrezPosicao().toPosicao();
@@ -138,10 +136,13 @@ public class PartidaXadrez {
         return novaPeca;
     }
 
-    private PecaXadrez novaPeca(String type, Color cor){
-        if (type.equals("B")) return new Bispo(tabuleiro, cor);
-        if (type.equals("C")) return new Cavalo(tabuleiro, cor);
-        if (type.equals("Q")) return new Rainha(tabuleiro, cor);
+    private PecaXadrez novaPeca(String type, Color cor) {
+        if (type.equals("B"))
+            return new Bispo(tabuleiro, cor);
+        if (type.equals("C"))
+            return new Cavalo(tabuleiro, cor);
+        if (type.equals("Q"))
+            return new Rainha(tabuleiro, cor);
         return new Torre(tabuleiro, cor);
     }
 

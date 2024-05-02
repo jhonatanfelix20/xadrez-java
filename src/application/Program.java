@@ -42,7 +42,12 @@ public class Program {
                 }
                 if (partidaXadrez.getPromocao() != null) {
                     System.out.print("Entre com a peca para promocao (B/C/R/Q): ");
-                    String type = sc.nextLine();
+                    String type = sc.nextLine().toUpperCase();
+                    while(!type.equals("B") && !type.equals("C") && !type.equals("R") && !type.equals("Q")) {
+                        System.out.print("Valor errado! Entre com a peca para promocao (B/C/R/Q): ");
+                        type = sc.nextLine().toUpperCase();
+
+                    } 
                     partidaXadrez.substituirPeca(type);
                 }
             }
