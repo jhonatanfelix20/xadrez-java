@@ -3,12 +3,16 @@ package xadrez.pecas;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 import xadrez.Color;
+import xadrez.PartidaXadrez;
 import xadrez.PecaXadrez;
 
 public class Peao extends PecaXadrez {
 
-    public Peao(Tabuleiro tabuleiro, Color cor) {
+    private PartidaXadrez partidaXadrez;
+
+    public Peao(Tabuleiro tabuleiro, Color cor, PartidaXadrez partidaXadrez) {
         super(tabuleiro, cor);
+        this.partidaXadrez = partidaXadrez;
     }
 
     @Override
@@ -40,7 +44,21 @@ public class Peao extends PecaXadrez {
             if (getTabuleiro().posicaoExiste(p) && existePecaOponente(p)) {
                 mat[p.getLinha()][p.getColuna()] = true;
             }
-        } else {
+
+            // #specialmove en passant white
+            if (posicao.getLinha() == 3) {
+                Posicao left = new Posicao(posicao.getLinha(), posicao.getColuna() - 1);
+                if (getTabuleiro().posicaoExiste(left) && existePecaOponente(left) && getTabuleiro().peca(left) == partidaXadrez.getEnPassantVuneral()) {
+                    mat[left.getLinha() - 1][left.getColuna()] = true;
+                }
+                Posicao right = new Posicao(posicao.getLinha(), posicao.getColuna() + 1);
+                if (getTabuleiro().posicaoExiste(right) && existePecaOponente(right) && getTabuleiro().peca(right) == partidaXadrez.getEnPassantVuneral()) {
+                    mat[right.getLinha() - 1][right.getColuna()] = true;
+                }
+            }
+
+        } 
+        else {
             // uma casa para frente
             p.setValores(posicao.getLinha() + 1, posicao.getColuna());
             if (getTabuleiro().posicaoExiste(p) && !getTabuleiro().existePeca(p)) {
@@ -62,6 +80,18 @@ public class Peao extends PecaXadrez {
             p.setValores(posicao.getLinha() + 1, posicao.getColuna() + 1);
             if (getTabuleiro().posicaoExiste(p) && existePecaOponente(p)) {
                 mat[p.getLinha()][p.getColuna()] = true;
+            }
+
+            // #specialmove en passant black
+            if (posicao.getLinha() == 4) {
+                Posicao left = new Posicao(posicao.getLinha(), posicao.getColuna() - 1);
+                if (getTabuleiro().posicaoExiste(left) && existePecaOponente(left) && getTabuleiro().peca(left) == partidaXadrez.getEnPassantVuneral()) {
+                    mat[left.getLinha() + 1][left.getColuna()] = true;
+                }
+                Posicao right = new Posicao(posicao.getLinha(), posicao.getColuna() + 1);
+                if (getTabuleiro().posicaoExiste(right) && existePecaOponente(right) && getTabuleiro().peca(right) == partidaXadrez.getEnPassantVuneral()) {
+                    mat[right.getLinha() + 1][right.getColuna()] = true;
+                }
             }
         }
 
