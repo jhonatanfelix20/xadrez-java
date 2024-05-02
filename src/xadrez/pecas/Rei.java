@@ -2,13 +2,17 @@ package xadrez.pecas;
 
 import xadrez.PecaXadrez;
 import xadrez.Color;
+import xadrez.PartidaXadrez;
 import tabuleiro.Posicao;
 import tabuleiro.Tabuleiro;
 
 public class Rei extends PecaXadrez{
 
-    public Rei(Tabuleiro tabuleiro, Color cor) {
+    private PartidaXadrez partidaXadrez;
+
+    public Rei(Tabuleiro tabuleiro, Color cor, PartidaXadrez partidaXadrez) {
         super(tabuleiro, cor);
+        this.partidaXadrez = partidaXadrez;
     }
 
     @Override
@@ -19,6 +23,11 @@ public class Rei extends PecaXadrez{
     private boolean podeMover(Posicao posicao){
         PecaXadrez p = (PecaXadrez) getTabuleiro().peca(posicao);
         return p == null || p.getCor() != getCor();
+    }
+
+    private boolean testeTorreRoque(Posicao posicao){
+        PecaXadrez p = (PecaXadrez) getTabuleiro().peca(posicao);
+        return p != null && p instanceof Torre && p.getCor() == getCor() && p.getContadorMovimentos() == 0;
     }
 
     @Override
@@ -76,7 +85,32 @@ public class Rei extends PecaXadrez{
             mat[p.getLinha()][p.getColuna()] = true;
         }
 
+        // #specialmove Roque
+        if(getContadorMovimentos() == 0 && !partidaXadrez.getCheck()){
 
+            // #specialmove Roque pequeno
+            Posicao posT1 = new Posicao(posicao.getLinha(), posicao.getColuna() + 3);
+            if (testeTorreRoque(posT1)){
+                Posicao p1 = new Posicao(posicao.getLinha(), posicao.getColuna() + 1);
+                Posicao p2 = new Posicao(posicao.getLinha(), posicao.getColuna() + 2);
+                if (getTabuleiro().peca(p1) == null && getTabuleiro().peca(p2) == null){
+                    mat[posicao.getLinha()][posicao.getColuna() + 2] = true;
+                }
+            }
+
+            // #specialmove Roque grande)
+            Posicao posT2 = new Posicao(posicao.getLinha(), posicao.getColuna() - 4);
+            if (testeTorreRoque(posT2)){
+                Posicao p1 = new Posicao(posicao.getLinha(), posicao.getColuna() - 1);
+                Posicao p2 = new Posicao(posicao.getLinha(), posicao.getColuna() - 2);
+                Posicao p3 = new Posicao(posicao.getLinha(), posicao.getColuna() - 3);
+                if (getTabuleiro().peca(p1) == null && getTabuleiro().peca(p2) == null && getTabuleiro().peca(p3) == null){
+                    mat[posicao.getLinha()][posicao.getColuna() - 2] = true;
+                }
+            }
+
+
+        }
 
         return mat;
     }
